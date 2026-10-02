@@ -1,3 +1,5 @@
+================================== Cuestionario ==================================
+
 1. ¿Por qué Counter1 y Counter2 pueden ejecutar la misma función counterTask() y comportarse diferente?
 Porque se crean dos instancias de la misma función, pero cada una recibe mediante pvParameters una estructura de configuración diferente: counter1 o counter2.
 
@@ -29,3 +31,23 @@ Se podría sustituir parte de la comunicación mediante variables compartidas y 
 
 10. Si ambas tareas tienen la misma prioridad, ¿cómo interviene el scheduler de FreeRTOS?
 Las dos tareas Counter1 y Counter2 se crean con prioridad 2. Cuando ambas están listas para ejecutarse, el scheduler de FreeRTOS permite que compartan el tiempo de CPU mediante planificación entre tareas de igual prioridad. Además, en esta práctica ambas pasan periódicamente a estado BLOCKED mediante vTaskDelay(), permitiendo que otras tareas puedan ejecutarse.
+
+
+
+================================== Preguntas adicionales ==================================
+
+¿Qué resolvió pvParameters?
+
+El argumento pvParameters permitió pasar diferentes tipos de datos a las tareas mediante punteros. Dentro de cada tarea, este parámetro puede convertirse mediante un cast al tipo de dato que realmente se necesita utilizar.
+
+A grandes rasgos, pvParameters facilita que una misma función de tarea pueda recibir información específica, como estructuras, variables, configuraciones o estados del sistema, sin importar el tipo de dato original.
+
+¿Qué resolvió TaskHandle?
+
+TaskHandle permitió tener una referencia directa a una tarea específica dentro del sistema. Gracias a este identificador fue posible controlar su ejecución, por ejemplo, suspenderla, reanudarla o consultar información relacionada con ella.
+
+¿Qué riesgo queda al no usar mecanismos de sincronización?
+
+El principal riesgo es que dos o más tareas accedan al mismo recurso o variable compartida al mismo tiempo. Esto puede producir condiciones de carrera, donde el resultado depende del orden exacto en que el planificador del RTOS ejecute las tareas.
+
+Por ejemplo, si una tarea modifica el estado de un contador mientras otra lo está leyendo, la segunda podría trabajar con un dato inconsistente o desactualizado. También pueden ocurrir pérdidas de información cuando varias tareas intentan modificar una misma variable casi simultáneamente.
